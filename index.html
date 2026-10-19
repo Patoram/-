@@ -19,7 +19,7 @@ label{display:block;font-size:13px;margin:8px 0 2px}
 input,textarea{width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--tx);font:inherit}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .item{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 28px;gap:6px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--bd)}
-.item .d{grid-column:1/-1}
+.item .d,.item .a{grid-column:1/-1}
 button{font:inherit;padding:8px 14px;border-radius:6px;border:1px solid var(--ac);background:none;color:var(--ac);cursor:pointer}
 button.p{background:var(--ac);color:#fff}
 .x{padding:0;border-color:var(--bd);color:#dc2626}
@@ -74,9 +74,9 @@ function baht(n){
  let r=(b?conv(String(b)):'ศูนย์')+'บาท';
  return r+(s?conv(String(s))+'สตางค์':'ถ้วน');
 }
-function addItem(c='',d='',q='',u='',p=''){
+function addItem(c='',d='',q='',u='',p='',a=''){
  const e=document.createElement('div');e.className='item';
- e.innerHTML=`<input class="d" placeholder="รายการ (DESCRIPTION)" value="${esc(d)}"><input class="c" placeholder="รหัส" value="${esc(c)}"><input class="q" type="number" placeholder="จำนวน" value="${q}"><input class="u" placeholder="หน่วย" value="${esc(u)}"><input class="p" type="number" placeholder="ราคา/หน่วย" value="${p}"><button class="x" onclick="this.parentNode.remove();render()">×</button>`;
+ e.innerHTML=`<input class="d" placeholder="รายการ (DESCRIPTION)" value="${esc(d)}"><input class="c" placeholder="รหัส" value="${esc(c)}"><input class="q" type="number" placeholder="จำนวน" value="${q}"><input class="u" placeholder="หน่วย" value="${esc(u)}"><input class="p" type="number" placeholder="ราคา/หน่วย" value="${p}"><button class="x" onclick="this.parentNode.remove();render()">×</button><input class="a" type="number" placeholder="จำนวนเงิน (ถ้าเว้นว่าง = จำนวน × ราคา/หน่วย)" value="${a}">`;
  $('items').appendChild(e);render();
 }
 function render(){
@@ -84,8 +84,10 @@ function render(){
  document.title=($('job').value.trim()||$('no').value.trim()||'ใบเสนอราคา').replace(/[\\\/:*?"<>|]/g,'-');
  document.querySelectorAll('.item').forEach(e=>{
   const g=k=>e.querySelector('.'+k).value;
-  const q=+g('q')||0,p=+g('p')||0,t=q*p;sub+=t;n++;
-  rows+=`<tr><td class="c">${esc(g('c'))||n}</td><td>${esc(g('d'))}</td><td class="c">${q?q+' '+esc(g('u')):''}</td><td class="c">${p?fmt(p):''}</td><td class="c">${t?fmt(t):''}</td></tr>`;
+  const q=+g('q')||0,p=+g('p')||0,calc=q*p,hasA=g('a').trim()!=='',t=hasA?(+g('a')||0):calc;
+  e.querySelector('.a').placeholder=calc?'จำนวนเงิน (เว้นว่าง = '+fmt(calc)+')':'จำนวนเงิน (ถ้าเว้นว่าง = จำนวน × ราคา/หน่วย)';
+  sub+=t;n++;
+  rows+=`<tr><td class="c">${esc(g('c'))||n}</td><td>${esc(g('d'))}</td><td class="c">${q?q+' '+esc(g('u')):esc(g('u'))}</td><td class="c">${p?fmt(p):''}</td><td class="c">${t||hasA?fmt(t):''}</td></tr>`;
  });
  for(;n<7;n++)rows+=`<tr><td class="c">${n+1}</td><td></td><td></td><td></td><td></td></tr>`;
  const vr=+$('vat').value||0,v=sub*vr/100,g=sub+v;
