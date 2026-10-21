@@ -30,6 +30,7 @@ button.p{background:var(--ac);color:#fff}
 #paper th{font-weight:400;text-align:center;padding:6px}
 #paper td{height:26px}
 #paper .nb{border:none}
+#paper td.pw{white-space:pre-wrap}
 .r{text-align:right}.c{text-align:center}
 @media print{
  @page{size:A4;margin:0}
@@ -87,9 +88,9 @@ function render(){
   const q=+g('q')||0,p=+g('p')||0,calc=q*p,hasA=g('a').trim()!=='',t=hasA?(+g('a')||0):calc;
   e.querySelector('.a').placeholder=calc?'จำนวนเงิน (เว้นว่าง = '+fmt(calc)+')':'จำนวนเงิน (ถ้าเว้นว่าง = จำนวน × ราคา/หน่วย)';
   sub+=t;n++;
-  rows+=`<tr><td class="c">${esc(g('c'))||n}</td><td>${esc(g('d'))}</td><td class="c">${q?q+' '+esc(g('u')):esc(g('u'))}</td><td class="c">${p?fmt(p):''}</td><td class="c">${t||hasA?fmt(t):''}</td></tr>`;
+  rows+=`<tr><td class="c">${esc(g('c'))}</td><td class="pw">${esc(g('d'))}</td><td class="c">${q?q+' '+esc(g('u')):esc(g('u'))}</td><td class="c">${p?fmt(p):''}</td><td class="c">${t||hasA?fmt(t):''}</td></tr>`;
  });
- for(;n<7;n++)rows+=`<tr><td class="c">${n+1}</td><td></td><td></td><td></td><td></td></tr>`;
+ for(;n<7;n++)rows+=`<tr><td class="c"></td><td></td><td></td><td></td><td></td></tr>`;
  const vr=+$('vat').value||0,v=sub*vr/100,g=sub+v;
  $('paper').innerHTML=`
  <div style="font-weight:700;font-size:14px">${esc($('co').value)}</div>
