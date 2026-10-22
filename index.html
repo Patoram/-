@@ -2,114 +2,280 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ระบบทำใบเสนอราคา</title>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&family=Noto+Serif+Thai:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ใบกำกับภาษี และรายงานภาษีซื้อ-ขาย</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f3f4f6;--card:#fff;--tx:#1f2937;--bd:#d1d5db;--ac:#2563eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111827;--card:#1f2937;--tx:#e5e7eb;--bd:#4b5563;--ac:#60a5fa}}
-:root[data-theme="dark"]{--bg:#111827;--card:#1f2937;--tx:#e5e7eb;--bd:#4b5563;--ac:#60a5fa}
+:root{--bg:#0f1b2d;--pn:#1a2a42;--ln:#2e4260;--tx:#e8eef7;--mu:#8fa3bf;--ac:#4aa3ff;--rd:#e03131}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font-family:'Sarabun',sans-serif;font-size:15px}
-.wrap{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:16px;padding:16px;max-width:1300px;margin:auto}
-@media(max-width:860px){.wrap{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px}
-h2{margin:0 0 10px;font-size:17px}
-label{display:block;font-size:13px;margin:8px 0 2px}
-input,textarea{width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--tx);font:inherit}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.item{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 28px;gap:6px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--bd)}
-.item .d,.item .a{grid-column:1/-1}
-button{font:inherit;padding:8px 14px;border-radius:6px;border:1px solid var(--ac);background:none;color:var(--ac);cursor:pointer}
-button.p{background:var(--ac);color:#fff}
-.x{padding:0;border-color:var(--bd);color:#dc2626}
-.paper-wrap{overflow-x:auto}
-#paper{background:#fff;color:#000;width:210mm;min-height:297mm;padding:15mm 18mm;margin:auto;box-shadow:0 2px 10px #0003;font-family:'Noto Serif Thai',serif;font-size:13px;line-height:1.5}
-#paper table{width:100%;border-collapse:collapse;table-layout:fixed}
-#paper th,#paper td{border:1px solid #000;padding:2px 6px;vertical-align:top;overflow-wrap:anywhere}
-#paper th{font-weight:400;text-align:center;padding:6px}
-#paper td{height:26px}
-#paper .nb{border:none}
-#paper td.pw{white-space:pre-wrap}
-.r{text-align:right}.c{text-align:center}
+.tabs{display:flex;gap:6px;padding:12px 16px;border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.tabs button{background:none;border:1px solid var(--ln);color:var(--mu);padding:8px 16px;border-radius:8px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--ac);border-color:var(--ac);color:#06223f;font-weight:700}
+.view{display:none;padding:16px}.view.on{display:block}
+.wrap{display:grid;grid-template-columns:minmax(300px,430px) 1fr;gap:24px;align-items:start}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.panel{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:16px}
+h2{margin:0 0 10px;font-size:18px}h3{margin:16px 0 8px;font-size:16px}
+label{display:block;font-size:13px;color:var(--mu);margin:8px 0 3px}
+input,textarea,select{width:100%;background:var(--bg);border:1px solid var(--ln);color:var(--tx);padding:9px 10px;border-radius:8px;font:inherit}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--ac)}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.item{border-bottom:1px dashed var(--ln);padding:8px 0}
+.item .r{display:grid;grid-template-columns:.8fr .8fr 1fr 1fr 34px;gap:6px;margin-top:6px}
+.x{background:none;border:1px solid var(--rd);color:var(--rd);border-radius:8px;cursor:pointer;font:inherit}
+.btn{background:var(--ac);color:#06223f;border:0;padding:10px 16px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer}
+.btn.o{background:none;border:1px solid var(--ac);color:var(--ac)}.btn.sm{padding:3px 10px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chk{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--tx);font-size:14px}.chk input{width:auto}
+.bar{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:12px}.bar>div{min-width:160px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#2b8a3e;color:#fff;padding:10px 18px;border-radius:8px;display:none;z-index:9}
+/* กระดาษ */
+.doc{background:#fff;color:#000;font-family:'Sarabun',sans-serif;font-size:13px;padding:32px 36px;line-height:1.35;overflow-x:auto}
+.doc .c{text-align:center}.doc .big{font-size:22px;font-weight:700}.doc .b{font-weight:700}
+.doc table{border-collapse:collapse;width:100%}
+.doc td,.doc th{border:1px solid #000;padding:3px 6px;vertical-align:top}
+.doc th{font-weight:600;text-align:center;vertical-align:middle}
+.doc .n{text-align:right;font-weight:700}.doc .m{text-align:center}
+.doc .bl td{height:25px}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;margin:12px 0 4px}.top>div:first-child,.top>div:last-child{min-width:0;overflow-wrap:anywhere}.top>div:last-child{text-align:right}
+.box{border:1px solid #000;padding:2px 14px;font-weight:700}
+.cust{display:grid;grid-template-columns:1fr 190px;border:1px solid #000;margin-top:6px;border-bottom:0}
+.cust>div{padding:4px 8px}.cust>div:first-child{border-right:1px solid #000}
+.sm{font-size:10px;color:#444}
+.bot{display:grid;grid-template-columns:1fr 280px;gap:0;margin-top:0}
+.bot>.l{padding:30px 16px 0;display:flex;align-items:flex-start}
+.chr{border:1px solid #000;padding:6px 10px;text-align:center;flex:1;font-weight:600}
+.sig{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;margin-top:56px;font-size:12px}
+.red{color:#d00}
+.rep{min-height:700px}.rep .hd{text-align:center;font-size:20px;font-weight:700;margin-bottom:10px}
+.rep .ck{display:inline-block;width:14px;height:14px;border:1px solid #000;vertical-align:middle;margin:0 4px;text-align:center;line-height:12px;font-size:12px}
+.rep td{font-size:12.5px;overflow-wrap:anywhere}.rep td,.rep th{padding:3px 4px}.rep td.n{white-space:nowrap}
 @media print{
- @page{size:A4;margin:0}
- body{background:#fff}.wrap{display:block;padding:0}.card.form{display:none}
- .paper-wrap{overflow:visible}#paper{box-shadow:none;margin:0}
+ body{background:#fff}.noprint,.tabs{display:none!important}
+ .view{padding:0}.wrap{display:block}.doc{padding:0;overflow:visible}
+ @page{size:A4;margin:12mm}
+ #doc{min-height:266mm;display:flex;flex-direction:column;padding:0 2mm}.doc.rep{padding:0 2mm;min-height:0}#doc .bot{margin-bottom:40px}#doc .sig{margin-top:auto;padding-bottom:3mm}
 }
 </style>
 </head>
 <body>
-<div class="wrap">
-<div class="card form">
- <h2>ข้อมูลใบเสนอราคา</h2>
- <div class="row"><div><label>ชื่อผู้เสนอราคา / บริษัท</label><input id="co" value="นาย ชัยวัฒน์ แสงกุดเรือ"></div><div><label>โทร</label><input id="tel" value="087-126-9998"></div></div>
- <label>เลขที่ / NO</label><input id="no">
- <label>เรียน</label><input id="cu">
- <label>ราคางาน</label><input id="job">
- <h2 style="margin-top:14px">รายการ</h2>
- <div id="items"></div>
- <button onclick="addItem()">+ เพิ่มรายการ</button>
- <div style="margin-top:8px"><label>VAT (%) — ใส่ 0 ถ้าไม่มี VAT</label><input id="vat" type="number" value="7"></div>
- <p style="margin-top:14px"><button class="p" onclick="window.print()">ดาวน์โหลด PDF</button>
- <small style="display:block;margin-top:6px;opacity:.7">ในหน้าต่างพิมพ์ เลือกเครื่องพิมพ์เป็น "บันทึกเป็น PDF"</small></p>
+<div class="tabs noprint" id="tabs">
+ <button data-v="inv" class="on">ใบกำกับภาษี</button>
+ <button data-v="sales">รายงานภาษีขาย</button>
+ <button data-v="buy">รายงานภาษีซื้อ</button>
+ <button data-v="set">ตั้งค่า / สำรองข้อมูล</button>
 </div>
-<div class="paper-wrap"><div id="paper"></div></div>
+
+<div class="view on" id="v-inv"><div class="wrap">
+ <div class="panel noprint">
+  <h2>ข้อมูลใบกำกับภาษี</h2>
+  <div class="r2"><div><label>เล่มที่</label><input id="vol"></div><div><label>เลขที่</label><input id="no"></div></div>
+  <div class="r2"><div><label>วันที่</label><input id="date" type="date"></div><div><label>ประเภทสำเนา</label><select id="copy"><option>ต้นฉบับ/ORIGINAL</option><option>สำเนา/COPY</option></select></div></div>
+  <h3>ผู้ซื้อ</h3>
+  <label>นามผู้ซื้อ</label><input id="buyer">
+  <label>ที่อยู่</label><textarea id="addr" rows="2"></textarea>
+  <div class="r2"><div><label>เลขที่ผู้เสียภาษี</label><input id="taxid" inputmode="numeric" maxlength="13"></div><div><label>สาขา (ว่าง = สำนักงานใหญ่)</label><input id="branch"></div></div>
+  <div class="r2"><div><label>ใบสั่งซื้อเลขที่ P/O (ถ้ามี)</label><input id="po"></div><div><label>เงื่อนไขการชำระเงิน (ถ้ามี)</label><input id="terms"></div></div>
+  <h3>รายการ</h3>
+  <div id="items"></div>
+  <div class="row"><button class="btn o" id="addItem">+ เพิ่มรายการ</button></div>
+  <p style="color:var(--mu);font-size:12px;margin:6px 0 0">กรอกจำนวนกับราคา/หน่วย ระบบคูณให้ หรือกรอกเฉพาะ "จำนวนเงิน" ก็ได้ บรรทัดหัวข้อเว้นเงินว่างได้ ช่อง "ลำดับ" ว่างได้ ไม่รันเลขให้เอง</p><label>บรรทัดสุดท้ายของตาราง (พิมพ์ข้อความเองได้เลย)</label><input id="site" placeholder="เช่น ไซต์งาน ... สาขา ...">
+  <div class="r2"><div><label>ส่วนลด (บาท)</label><input id="disc" type="number" min="0" step="any"></div><div><label>อัตรา VAT (%)</label><input id="rate" type="number" min="0" step="any" value="7"></div></div>
+  <label class="chk"><input type="checkbox" id="incl"> ราคาที่กรอกรวม VAT แล้ว</label>
+  <div class="row">
+   <button class="btn" id="save">บันทึกลงรายงานภาษีขาย</button>
+   <button class="btn o" id="pdf">บันทึก PDF / พิมพ์</button>
+   <button class="btn o" id="clear">ใบใหม่</button>
+  </div>
+ </div>
+ <div class="doc" id="doc"></div>
+</div></div>
+
+<div class="view" id="v-sales">
+ <div class="panel noprint" style="margin-bottom:14px">
+  <h2>เพิ่มรายการภาษีขายเอง (เช่น ทำย้อนหลัง)</h2>
+  <div class="r3"><div><label>วันที่</label><input id="md" type="date"></div><div><label>เล่มที่</label><input id="mvol"></div><div><label>เลขที่</label><input id="mno"></div></div>
+  <div class="r2"><div><label>ชื่อผู้ซื้อ</label><input id="mbuy"></div><div><label>เลขผู้เสียภาษีผู้ซื้อ</label><input id="mtax" maxlength="13" inputmode="numeric"></div></div>
+  <div class="r3"><div><label>สาขา (ว่าง = สนญ.)</label><input id="mbr"></div><div><label>มูลค่าก่อน VAT</label><input id="mval" type="number" step="any"></div><div><label>VAT 7% (แก้ได้)</label><input id="mvat" type="number" step="any"></div></div>
+  <div class="row"><button class="btn" id="mAdd">เพิ่มลงรายงานภาษีขาย</button><button class="btn o" id="mClr">ล้างช่อง</button></div>
+  <p style="color:var(--mu);font-size:12px;margin:8px 0 0">รายการที่เพิ่มเองจะมีลิงก์ "แก้" ในตาราง กดแล้วข้อมูลจะกลับมาที่ช่องนี้ แก้แล้วกดเพิ่มอีกครั้ง (เลขที่/เล่มที่เดิมจะถูกแทนที่)</p>
+ </div>
+ <div class="bar noprint"><div><label>เดือนภาษี</label><input type="month" id="sm"></div><button class="btn" id="sCsv">ส่งออก Excel (CSV)</button><button class="btn o" onclick="window.print()">พิมพ์ / PDF</button></div>
+ <div class="doc rep" id="sOut"></div>
 </div>
+
+<div class="view" id="v-buy">
+ <div class="panel noprint" style="margin-bottom:14px">
+  <h2>บันทึกใบกำกับภาษีที่ได้รับ (ภาษีซื้อ)</h2>
+  <div class="r2"><div><label>วันที่</label><input id="bd" type="date"></div><div><label>เลขที่ใบกำกับภาษี</label><input id="bn"></div></div>
+  <div class="r2"><div><label>ชื่อผู้ขาย</label><input id="bs"></div><div><label>เลขผู้เสียภาษีผู้ขาย</label><input id="bt" maxlength="13" inputmode="numeric"></div></div>
+  <div class="r3"><div><label>สาขา (ว่าง = สนญ.)</label><input id="bb"></div><div><label>มูลค่าก่อน VAT</label><input id="bv" type="number" step="any"></div><div><label>VAT (แก้ได้)</label><input id="bx" type="number" step="any"></div></div>
+  <div class="row"><button class="btn" id="bAdd">เพิ่มลงรายงานภาษีซื้อ</button></div>
+ </div>
+ <div class="bar noprint"><div><label>เดือนภาษี</label><input type="month" id="bm"></div><button class="btn" id="bCsv">ส่งออก Excel (CSV)</button><button class="btn o" onclick="window.print()">พิมพ์ / PDF</button></div>
+ <div class="doc rep" id="bOut"></div>
+</div>
+
+<div class="view" id="v-set"><div class="panel" style="max-width:560px">
+ <h2>ข้อมูลผู้ขาย (แสดงบนหัวใบกำกับภาษีและรายงาน)</h2>
+ <label>ชื่อ</label><input id="sn">
+ <label>ลักษณะงาน (บรรทัดใต้ชื่อ)</label><input id="sg">
+ <label>ที่อยู่ (เช่น เลขที่ 236/158 หมู่ 6 ต.บางเมือง ...)</label><textarea id="sa" rows="2"></textarea>
+ <div class="r2"><div><label>เลขผู้เสียภาษี 13 หลัก</label><input id="st" maxlength="13" inputmode="numeric"></div><div><label>สาขา (ว่าง = สำนักงานใหญ่)</label><input id="sb"></div></div>
+ <label>โทร</label><input id="sp">
+ <div class="row"><button class="btn" id="saveSet">บันทึกการตั้งค่า</button></div>
+ <h3>สำรองข้อมูล</h3>
+ <p style="color:var(--mu);margin:0 0 8px">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้ ล้างข้อมูลแล้วจะหาย กดสำรองเป็นไฟล์เก็บไว้เป็นระยะ ส่งไฟล์ให้คนอื่นในครอบครัวนำเข้าเพื่อใช้ข้อมูลชุดเดียวกันได้</p>
+ <div class="row"><button class="btn o" id="bk1">สำรองข้อมูล (ไฟล์ JSON)</button><button class="btn o" id="rs1">นำเข้าข้อมูล</button><input type="file" id="rf" accept=".json" hidden></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
 <script>
 const $=id=>document.getElementById(id);
-const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:2});
-const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const D=['ศูนย์','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'],U=['','สิบ','ร้อย','พัน','หมื่น','แสน'];
-function conv(s){
- if(s.length>6)return conv(s.slice(0,-6))+'ล้าน'+conv(s.slice(-6));
- let r='';const L=s.length;
- for(let i=0;i<L;i++){const d=+s[i],p=L-i-1;if(!d)continue;
-  if(p==1)r+=(d==1?'':d==2?'ยี่':D[d])+'สิบ';
-  else if(p==0)r+=(d==1&&L>1)?'เอ็ด':D[d];
-  else r+=D[d]+U[p];}
- return r;
-}
-function baht(n){
- const t=Math.round(n*100),b=Math.floor(t/100),s=t%100;
- let r=(b?conv(String(b)):'ศูนย์')+'บาท';
- return r+(s?conv(String(s))+'สตางค์':'ถ้วน');
-}
-function addItem(c='',d='',q='',u='',p='',a=''){
- const e=document.createElement('div');e.className='item';
- e.innerHTML=`<input class="d" placeholder="รายการ (DESCRIPTION)" value="${esc(d)}"><input class="c" placeholder="รหัส" value="${esc(c)}"><input class="q" type="number" placeholder="จำนวน" value="${q}"><input class="u" placeholder="หน่วย" value="${esc(u)}"><input class="p" type="number" placeholder="ราคา/หน่วย" value="${p}"><button class="x" onclick="this.parentNode.remove();render()">×</button><input class="a" type="number" placeholder="จำนวนเงิน (ถ้าเว้นว่าง = จำนวน × ราคา/หน่วย)" value="${a}">`;
- $('items').appendChild(e);render();
-}
-function render(){
- let sub=0,rows='',n=0;
- document.title=($('job').value.trim()||$('no').value.trim()||'ใบเสนอราคา').replace(/[\\\/:*?"<>|]/g,'-');
- document.querySelectorAll('.item').forEach(e=>{
-  const g=k=>e.querySelector('.'+k).value;
-  const q=+g('q')||0,p=+g('p')||0,calc=q*p,hasA=g('a').trim()!=='',t=hasA?(+g('a')||0):calc;
-  e.querySelector('.a').placeholder=calc?'จำนวนเงิน (เว้นว่าง = '+fmt(calc)+')':'จำนวนเงิน (ถ้าเว้นว่าง = จำนวน × ราคา/หน่วย)';
-  sub+=t;n++;
-  rows+=`<tr><td class="c">${esc(g('c'))}</td><td class="pw">${esc(g('d'))}</td><td class="c">${q?q+' '+esc(g('u')):esc(g('u'))}</td><td class="c">${p?fmt(p):''}</td><td class="c">${t||hasA?fmt(t):''}</td></tr>`;
- });
- for(;n<7;n++)rows+=`<tr><td class="c"></td><td></td><td></td><td></td><td></td></tr>`;
- const vr=+$('vat').value||0,v=sub*vr/100,g=sub+v;
- $('paper').innerHTML=`
- <div style="font-weight:700;font-size:14px">${esc($('co').value)}</div>
- <div style="font-weight:700">Tel : ${esc($('tel').value)}</div>
- <div class="c" style="margin:-4px 0 0 0"><div style="font-weight:700;font-size:14px;margin-top:6px">ใบเสนอราคา</div><div style="font-weight:700;margin-top:10px">QUOTATION</div></div>
- <div class="r" style="margin:12px 0 10px">เลขที่/NO ${esc($('no').value)}</div>
- <div>เรียน ${esc($('cu').value)}</div>
- <div style="margin-bottom:6px">ราคางาน ${esc($('job').value)}</div>
- <table>
- <colgroup><col style="width:14%"><col style="width:41%"><col style="width:13%"><col style="width:16%"><col style="width:16%"></colgroup>
- <tr><th>รหัสสินค้า<br>ITEM CODE</th><th>รายการ<br>DESCRIPTION</th><th>จำนวน</th><th>ราคาต่อหน่วย</th><th>จำนวนเงิน<br>AMOUNT</th></tr>
- ${rows}
- <tr><td colspan="2" class="nb"></td><td colspan="2" class="nb r">รวมเป็นเงิน</td><td class="c">${fmt(sub)}</td></tr>
- <tr><td colspan="2" class="nb c">(${baht(g)})</td><td colspan="2" class="nb r">VAT ${vr}%</td><td class="c">${vr?fmt(v):'-'}</td></tr>
- <tr><td colspan="2" class="nb"></td><td colspan="2" class="nb r">รวมเป็นเงินทั้งหมดทั้งสิ้น</td><td class="c" style="color:#e00000">${fmt(g)}</td></tr>
- </table>`;
-}
-document.querySelector('.form').addEventListener('input',render);
-addItem();addItem();addItem();
+const KEY='taxapp.v2';
+const SELLER0={name:'นายชัยวัฒน์ แสงกุดเรือ',tag:'รับงานติดตั้ง ระบบแอร์ และท่อลม',addr:'เลขที่ 236/158 หมู่ 6 ต.บางเมือง อ.เมืองสมุทรปราการ จ.สมุทรปราการ 10270',taxid:'3451000154221',branch:'',tel:'087-126-9998'};
+let D={seller:{...SELLER0},sales:[],buys:[]};
+try{const s=localStorage.getItem(KEY);if(s){const o=JSON.parse(s);D=Object.assign(D,o);D.seller={...SELLER0,...Object.fromEntries(Object.entries(o.seller||{}).filter(([k,v])=>v))}}}catch(e){}
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){toast('บันทึกในเบราว์เซอร์ไม่ได้ กรุณาสำรองข้อมูลเป็นไฟล์')}};
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
+const fm=n=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const th=d=>{if(!d)return'';const[y,m,x]=d.split('-');return`${x}/${m}/${+y+543}`};
+const th2=d=>{if(!d)return'';const[y,m,x]=d.split('-');return`${x}/${m}/${String(+y+543).slice(2)}`};
+const today=()=>new Date().toISOString().slice(0,10);
+const MN='มกราคม,กุมภาพันธ์,มีนาคม,เมษายน,พฤษภาคม,มิถุนายน,กรกฎาคม,สิงหาคม,กันยายน,ตุลาคม,พฤศจิกายน,ธันวาคม'.split(',');
+const brLabel=b=>b&&b.trim()?'สาขา '+esc(b):'สำนักงานใหญ่';
+
+function bahtText(n){
+ const dg='ศูนย์ หนึ่ง สอง สาม สี่ ห้า หก เจ็ด แปด เก้า'.split(' '),ps=['','สิบ','ร้อย','พัน','หมื่น','แสน'];
+ const conv=s=>{s=s.replace(/^0+/,'');if(!s)return'';if(s.length>6)return conv(s.slice(0,-6))+'ล้าน'+conv(s.slice(-6));
+  let o='';for(let i=0;i<s.length;i++){const d=+s[i],p=s.length-1-i;if(!d)continue;
+   if(p==1)o+=d==1?'สิบ':d==2?'ยี่สิบ':dg[d]+'สิบ';
+   else if(p==0)o+=(d==1&&s.length>1)?'เอ็ด':dg[d];
+   else o+=dg[d]+ps[p]}return o};
+ n=r2(n);if(!n)return'ศูนย์บาทถ้วน';
+ const[b,st]=n.toFixed(2).split('.');
+ return conv(b)+'บาท'+(+st?conv(st)+'สตางค์':'ถ้วน')}
+function money(n,show){ // แยกบาท / สตางค์ แบบในใบตัวอย่าง
+ if(!show)return['',''];const[b,s]=r2(n).toFixed(2).split('.');
+ return[Number(b).toLocaleString('en-US'),s==='00'?'-':s]}
+
+/* ฟอร์ม */
+let items=[];const newItem=()=>({no:'',desc:'',qty:'',unit:'',price:'',amt:''});
+const lineAmt=x=>(x.qty!==''&&x.price!=='')?r2(x.qty*x.price):(+x.amt||0);
+function drawItems(){
+ $('items').innerHTML=items.map((it,i)=>`<div class="item"><div style="display:grid;grid-template-columns:72px 1fr;gap:6px"><input data-i="${i}" data-k="no" placeholder="ลำดับ" value="${esc(it.no)}"><input data-i="${i}" data-k="desc" placeholder="รายการ (DESCRIPTION)" value="${esc(it.desc)}"></div>
+ <div class="r"><input data-i="${i}" data-k="qty" type="number" step="any" placeholder="จำนวน" value="${esc(it.qty)}"><input data-i="${i}" data-k="unit" placeholder="หน่วย" value="${esc(it.unit)}"><input data-i="${i}" data-k="price" type="number" step="any" placeholder="ราคา/หน่วย" value="${esc(it.price)}"><input data-i="${i}" data-k="amt" type="number" step="any" placeholder="จำนวนเงิน" value="${esc(it.amt)}"><button class="x" data-del="${i}">×</button></div></div>`).join('')}
+$('items').addEventListener('input',e=>{const t=e.target;if(t.dataset.i!=null){items[t.dataset.i][t.dataset.k]=t.value;drawDoc()}});
+$('items').addEventListener('click',e=>{const d=e.target.dataset.del;if(d!=null){items.splice(d,1);if(!items.length)items=[newItem()];drawItems();drawDoc()}});
+$('addItem').onclick=()=>{items.push(newItem());drawItems()};
+['vol','no','date','copy','buyer','addr','taxid','branch','po','terms','site','disc','rate','incl'].forEach(k=>$(k).addEventListener('input',drawDoc));
+
+function readInv(){return{vol:$('vol').value.trim(),no:$('no').value.trim(),date:$('date').value,copy:$('copy').value,buyer:$('buyer').value,addr:$('addr').value,taxid:$('taxid').value,branch:$('branch').value,po:$('po').value,terms:$('terms').value,site:$('site').value,
+ items:items.map(x=>({...x})),disc:+$('disc').value||0,rate:$('rate').value===''?7:+$('rate').value,incl:$('incl').checked}}
+function calc(v){
+ const sum=r2(v.items.reduce((a,x)=>a+lineAmt(x),0)),after=Math.max(0,r2(sum-v.disc));let base,vat,total;
+ if(v.incl){total=after;base=r2(total/(1+v.rate/100));vat=r2(total-base)}else{base=after;vat=r2(base*v.rate/100);total=r2(base+vat)}
+ return{sum,base,vat,total}}
+function setInv(v){$('vol').value=v.vol||'';$('no').value=v.no||'';$('date').value=v.date||today();$('copy').value=v.copy||'ต้นฉบับ/ORIGINAL';$('buyer').value=v.buyer||'';$('addr').value=v.addr||'';$('taxid').value=v.taxid||'';$('branch').value=v.branch||'';
+ $('po').value=v.po||'';$('terms').value=v.terms||'';$('site').value=v.site||'';$('disc').value=v.disc||'';$('rate').value=v.rate??7;$('incl').checked=!!v.incl;
+ items=(v.items&&v.items.length?v.items:[newItem()]).map(x=>({...x}));drawItems();drawDoc()}
+
+function drawDoc(){
+ const v=readInv(),c=calc(v),s=D.seller,rows=[];
+ const used=v.items.filter(x=>x.no||x.desc||x.qty||x.price||x.amt);
+ used.forEach((x,i)=>{const a=lineAmt(x),[b,st]=money(a,a>0);
+  rows.push(`<tr><td class="m">${esc(x.no)}</td><td>${esc(x.desc)}</td><td class="m">${esc(x.qty)} ${esc(x.unit)}</td><td class="n">${x.price!==''?fm(x.price):''}</td><td class="n" style="border-right:0">${b}</td><td class="m" style="border-left:0;width:26px">${a>0?st:''}</td></tr>`)});
+ const siteRow=v.site?`<tr><td class="m"></td><td>${esc(v.site)}</td><td></td><td></td><td style="border-right:0"></td><td style="border-left:0"></td></tr>`:'';for(let i=used.length;i<(v.site?8:9);i++)rows.push(`<tr class="bl"><td class="m">&nbsp;</td><td></td><td></td><td></td><td style="border-right:0"></td><td style="border-left:0"></td></tr>`);
+;if(siteRow)rows.push(siteRow);
+ const row=(l,sub,n,cls='')=>{const[b,st]=money(n,true);return`<tr><td style="border:0;text-align:right;padding-right:8px">${l}<br><span class="sm">${sub}</span></td><td class="n ${cls}" style="width:100px">${b}</td><td class="m ${cls}" style="width:26px">${st}</td></tr>`};
+ $('doc').innerHTML=`
+ <div class="c big">${esc(s.name)}</div><div class="c b">${esc(s.tag)}</div>
+ <div class="c"><u>${brLabel(s.branch)}</u> ${esc(s.addr)}</div><div class="c">โทร. ${esc(s.tel)} เลขประจำตัวผู้เสียภาษีอากร ${esc(s.taxid)}</div>
+ <div class="top"><div>เล่มที่ <span class="b">${esc(v.vol)}</span></div><div class="box">${esc(v.copy)}</div><div>เลขที่ <span class="b">${esc(v.no)}</span></div></div>
+ <div class="c" style="font-size:16px">ใบส่งสินค้า/ใบกำกับภาษี/ใบเสร็จรับเงิน</div><div class="c sm" style="margin-bottom:4px">DELIVERY ORDER/TAX INVOICE/RECEIPT</div>
+ <div class="cust"><div>นามผู้ซื้อ <b>${esc(v.buyer)}</b> ${v.buyer?'<b>'+brLabel(v.branch)+'</b>':''}<div class="sm">Customer</div>ที่อยู่ <b>${esc(v.addr)}</b><div class="sm">Address</div>เลขที่ผู้เสียภาษี <b>${esc(v.taxid)}</b></div>
+ <div>วันที่ <b>${th(v.date)}</b><div class="sm">Date</div>ใบสั่งซื้อเลขที่ ${esc(v.po)}<div class="sm">P/O NO.</div>เงื่อนไขการชำระเงิน ${esc(v.terms)}<div class="sm">Term of Payment</div></div></div>
+ <table style="table-layout:fixed"><colgroup><col style="width:44px"><col><col style="width:70px"><col style="width:100px"><col style="width:105px"><col style="width:28px"></colgroup><tr><th style="width:44px">ลำดับ<br><span class="sm">NO</span></th><th>รายการ<br><span class="sm">Description</span></th><th style="width:70px">จำนวน<br><span class="sm">Quantity</span></th><th style="width:90px">ราคาต่อหน่วย<br><span class="sm">Unit Price</span></th><th colspan="2" style="width:120px">จำนวนเงิน<br><span class="sm">Amount</span></th></tr>${rows.join('')}</table>
+ <div class="bot"><div class="l"><div style="margin-right:10px">ตัวอักษร<br><span class="sm">Character</span></div><div class="chr">${bahtText(c.total)}</div></div>
+ <table style="border-collapse:separate;border-spacing:0 2px"><tr style="display:none"></tr>${row('รวมเป็นเงิน','Sub Total',c.sum)}${v.disc?row('ส่วนลด','Discount',v.disc):''}${row('ภาษีมูลค่าเพิ่ม '+v.rate+' %','VAT',c.vat)}${row('จำนวนเงินทั้งสิ้น','Grand Total',c.total,'red')}</table></div>
+ <div class="sig"><div>............................................<br>ผู้ส่งสินค้า Delivered by<br>............/................../............</div><div>............................................<br>ผู้รับสินค้า Received by<br>............/................../............</div><div>............................................<br>ผู้รับเงิน Collector by<br>............/................../............</div></div>`}
+const nextNo=n=>/^\d+$/.test(n)?String(+n+1).padStart(n.length,'0'):n;
+$('save').onclick=()=>{
+ const v=readInv();if(!v.no){toast('กรุณากรอกเลขที่');$('no').focus();return}
+ if(!v.date){toast('กรุณาเลือกวันที่');return}
+ const rec={...v,...calc(v)},i=D.sales.findIndex(x=>x.no===v.no&&x.vol===v.vol);
+ if(i>=0)D.sales[i]=rec;else D.sales.push(rec);persist();drawReports();toast('บันทึกลงรายงานภาษีขายแล้ว')};
+$('pdf').onclick=()=>{const t=document.title;document.title=[$('no').value.trim(),$('vol').value.trim()].filter(Boolean).join('-')||'ใบกำกับภาษี';window.print();document.title=t};
+$('clear').onclick=()=>{const v=$('vol').value,n=$('no').value;setInv({date:today(),vol:v,no:nextNo(n)})};
+
+/* รายงาน (หน้าตาตามใบตัวอย่าง) */
+const monthOf=d=>(d||'').slice(0,7);
+const inM=(list,m)=>(m?list.filter(x=>monthOf(x.date)===m):list).slice().sort((a,b)=>a.date.localeCompare(b.date)||String(a.no).localeCompare(String(b.no)));
+function repHtml(title,m,list,rows,sumB,sumV,party){
+ const s=D.seller,hq=!(s.branch&&s.branch.trim());
+ const my=m?`เดือนภาษี ${MN[+m.slice(5)-1]} ปี ${+m.slice(0,4)+543}`:'เดือนภาษี ทั้งหมด';
+ const pad=Math.max(0,10-list.length),blank=`<tr class="bl"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+ return`<div class="hd">${title}</div><div>${my}</div><div>ชื่อผู้ประกอบการ <b>${esc(s.name)}</b> &nbsp; เลขประจำตัวผู้เสียภาษี <b>${esc(s.taxid)}</b></div>
+ <div style="margin:8px 0">ชื่อสถานประกอบการ <span style="margin-left:60px">สำนักงานใหญ่<span class="ck">${hq?'✓':''}</span> &nbsp; สาขา<span class="ck">${hq?'':'✓'}</span> ${hq?'':esc(s.branch)}</span></div>
+ <table style="table-layout:fixed"><colgroup><col style="width:5%"><col style="width:9%"><col style="width:14%"><col><col style="width:15%"><col style="width:5%"><col style="width:8%"><col style="width:13%"><col style="width:12%"></colgroup><tr><th rowspan="2" style="width:40px">ลำดับที่</th><th colspan="2">ใบกำกับภาษี</th><th rowspan="2">ชื่อ${party}</th><th rowspan="2" style="width:120px">เลขประจำตัวผู้เสียภาษีอากรของ${party}</th><th colspan="2">สถานประกอบการ</th><th rowspan="2" style="width:90px">มูลค่าสินค้าหรือบริการ</th><th rowspan="2" style="width:90px">จำนวนเงินภาษีมูลค่าเพิ่ม</th></tr>
+ <tr><th style="width:70px">วันเดือนปี</th><th style="width:100px">${title.includes('ขาย')?'เลขที่/เล่มที่':'เลขที่'}</th><th style="width:36px">สนญ.</th><th style="width:44px">สาขาที่</th></tr>
+ ${rows}${'<!--pad-->'.repeat(0)}${blank.repeat(pad)}
+ <tr><td colspan="3" style="border-right:0"></td><td class="b" style="border-left:0">รวม</td><td></td><td></td><td></td><td class="n">${fm(sumB)}</td><td class="n">${fm(sumV)}</td></tr></table>`}
+function drawReports(){
+ const sm=$('sm').value,sl=inM(D.sales,sm);
+ $('sOut').innerHTML=repHtml('รายงานภาษีขาย',sm,sl,sl.map((x,i)=>`<tr><td class="m">${i+1}</td><td class="m">${th2(x.date)}</td><td class="m">${esc(x.no)}${x.vol?'/'+esc(x.vol):''}</td><td>${esc(x.buyer)}</td><td class="m">${esc(x.taxid)}</td><td class="m">${x.branch?'':'/'}</td><td class="m">${esc(x.branch)}</td><td class="n">${fm(x.base)}</td><td class="n">${fm(x.vat)}<span class="noprint"> ${x.manual?`<a href="#" data-edit="${i}" data-m="s" style="font-size:11px">แก้</a>`:`<a href="#" data-open="${i}" data-m="s" style="font-size:11px">เปิด</a>`} <a href="#" data-del="${i}" data-m="s" style="font-size:11px;color:#d00">ลบ</a></span></td></tr>`).join(''),
+  sl.reduce((a,x)=>a+x.base,0),sl.reduce((a,x)=>a+x.vat,0),'ผู้ซื้อสินค้า/ผู้รับบริการ');
+ const bm=$('bm').value,bl=inM(D.buys,bm);
+ $('bOut').innerHTML=repHtml('รายงานภาษีซื้อ',bm,bl,bl.map((x,i)=>`<tr><td class="m">${i+1}</td><td class="m">${th2(x.date)}</td><td class="m">${esc(x.no)}</td><td>${esc(x.seller)}</td><td class="m">${esc(x.taxid)}</td><td class="m">${x.branch?'':'/'}</td><td class="m">${esc(x.branch)}</td><td class="n">${fm(x.base)}</td><td class="n">${fm(x.vat)}<span class="noprint"> <a href="#" data-del="${x.id}" data-m="b" style="font-size:11px;color:#d00">ลบ</a></span></td></tr>`).join(''),
+  bl.reduce((a,x)=>a+x.base,0),bl.reduce((a,x)=>a+x.vat,0),'ผู้ขายสินค้า/ผู้ให้บริการ')
+ +`<p class="noprint" style="margin-top:14px"><b>สรุปเดือนนี้ (ภ.พ.30):</b> ภาษีขาย ${fm(D.sales.filter(x=>!bm||monthOf(x.date)===bm).reduce((a,x)=>a+x.vat,0))} − ภาษีซื้อ ${fm(bl.reduce((a,x)=>a+x.vat,0))} = <b>${fm(D.sales.filter(x=>!bm||monthOf(x.date)===bm).reduce((a,x)=>a+x.vat,0)-bl.reduce((a,x)=>a+x.vat,0))}</b> บาท (บวก = ต้องชำระ, ลบ = เครดิตภาษี)</p>`}
+document.addEventListener('click',e=>{const d=e.target.dataset;if(!d.m)return;e.preventDefault();
+ if(d.m==='s'){const x=inM(D.sales,$('sm').value)[d.open??d.edit??d.del];if(!x)return;if(d.edit!=null){fillManual(x);return}
+  if(d.open!=null){setInv(x);show('inv')}else if(confirm('ลบใบกำกับภาษีเลขที่ '+x.no+' ออกจากรายงาน?')){D.sales=D.sales.filter(y=>y!==x);persist();drawReports()}}
+ else if(confirm('ลบรายการนี้?')){D.buys=D.buys.filter(y=>String(y.id)!==d.del);persist();drawReports()}});
+$('sm').oninput=$('bm').oninput=drawReports;
+
+const mClear=()=>['mvol','mno','mbuy','mtax','mbr','mval','mvat'].forEach(k=>$(k).value='');
+$('mval').addEventListener('input',()=>{$('mvat').value=$('mval').value?r2($('mval').value*0.07):''});
+function fillManual(x){$('md').value=x.date;$('mvol').value=x.vol||'';$('mno').value=x.no;$('mbuy').value=x.buyer||'';$('mtax').value=x.taxid||'';$('mbr').value=x.branch||'';$('mval').value=x.base;$('mvat').value=x.vat;
+ $('mno').scrollIntoView({block:'center'});toast('แก้ข้อมูลแล้วกด "เพิ่มลงรายงานภาษีขาย" อีกครั้ง')}
+$('mClr').onclick=mClear;
+$('mAdd').onclick=()=>{
+ const base=+$('mval').value,no=$('mno').value.trim(),vol=$('mvol').value.trim(),date=$('md').value;
+ if(!no||!date||!base){toast('กรอกวันที่ เลขที่ และมูลค่าให้ครบ');return}
+ const vat=r2($('mvat').value===''?base*0.07:+$('mvat').value);
+ const rec={vol,no,date,copy:'',buyer:$('mbuy').value,addr:'',taxid:$('mtax').value,branch:$('mbr').value,po:'',terms:'',site:'',items:[],disc:0,rate:7,incl:false,sum:r2(base),base:r2(base),vat,total:r2(base+vat),manual:true};
+ const i=D.sales.findIndex(x=>x.no===no&&x.vol===vol);if(i>=0)D.sales[i]=rec;else D.sales.push(rec);
+ persist();$('sm').value=monthOf(date);drawReports();mClear();$('mno').value=nextNo(no);$('mvol').value=vol;toast('เพิ่มลงรายงานภาษีขายแล้ว')};
+$('bv').addEventListener('input',()=>{$('bx').value=$('bv').value?r2($('bv').value*0.07):''});
+$('bAdd').onclick=()=>{
+ const base=+$('bv').value;if(!$('bn').value.trim()||!$('bd').value||!base){toast('กรอกวันที่ เลขที่ และมูลค่าให้ครบ');return}
+ D.buys.push({id:Date.now(),date:$('bd').value,no:$('bn').value.trim(),seller:$('bs').value,taxid:$('bt').value,branch:$('bb').value,base:r2(base),vat:r2(+$('bx').value||0)});
+ persist();['bn','bs','bt','bb','bv','bx'].forEach(k=>$(k).value='');drawReports();toast('เพิ่มลงรายงานภาษีซื้อแล้ว')};
+
+function csv(name,head,rows){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+[head,...rows].map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));a.download=name;a.click()}
+$('sCsv').onclick=()=>{const m=$('sm').value;csv(`รายงานภาษีขาย${m||'ทั้งหมด'}.csv`,['ลำดับ','วันที่','เลขที่/เล่มที่','ผู้ซื้อ','เลขผู้เสียภาษี','สาขา','มูลค่า','VAT'],inM(D.sales,m).map((x,i)=>[i+1,th(x.date),x.no+(x.vol?'/'+x.vol:''),x.buyer,x.taxid,x.branch||'สนญ.',x.base,x.vat]))};
+$('bCsv').onclick=()=>{const m=$('bm').value;csv(`รายงานภาษีซื้อ${m||'ทั้งหมด'}.csv`,['ลำดับ','วันที่','เลขที่','ผู้ขาย','เลขผู้เสียภาษี','สาขา','มูลค่า','VAT'],inM(D.buys,m).map((x,i)=>[i+1,th(x.date),x.no,x.seller,x.taxid,x.branch||'สนญ.',x.base,x.vat]))};
+
+function loadSet(){const s=D.seller;$('sn').value=s.name;$('sg').value=s.tag||'';$('sa').value=s.addr;$('st').value=s.taxid;$('sb').value=s.branch;$('sp').value=s.tel}
+$('saveSet').onclick=()=>{D.seller={name:$('sn').value,tag:$('sg').value,addr:$('sa').value,taxid:$('st').value,branch:$('sb').value,tel:$('sp').value};persist();drawDoc();drawReports();toast('บันทึกการตั้งค่าแล้ว')};
+$('bk1').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D)],{type:'application/json'}));a.download='สำรองข้อมูลภาษี-'+today()+'.json';a.click()};
+$('rs1').onclick=()=>$('rf').click();
+$('rf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const n=JSON.parse(r.result);
+ if(!confirm('นำเข้าจะรวมข้อมูลเข้ากับของเดิม (เลขที่/เล่มที่ซ้ำจะถูกแทนที่) ต้องการดำเนินการต่อ?'))return;
+ n.sales?.forEach(x=>{const i=D.sales.findIndex(y=>y.no===x.no&&y.vol===x.vol);i>=0?D.sales[i]=x:D.sales.push(x)});
+ n.buys?.forEach(x=>{if(!D.buys.some(y=>y.id===x.id))D.buys.push(x)});
+ if(n.seller&&confirm('ใช้ข้อมูลผู้ขายจากไฟล์ด้วยหรือไม่?'))D.seller=n.seller;
+ persist();loadSet();drawDoc();drawReports();toast('นำเข้าข้อมูลแล้ว')}catch(err){toast('ไฟล์ไม่ถูกต้อง')}};r.readAsText(f);e.target.value=''};
+
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v))}
+$('tabs').onclick=e=>{if(e.target.dataset.v)show(e.target.dataset.v)};
+loadSet();setInv({date:today()});$('bd').value=today();$('md').value=today();
+const cm=today().slice(0,7);$('sm').value=cm;$('bm').value=cm;drawReports();
 </script>
 </body>
 </html>
